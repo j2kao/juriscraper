@@ -60,7 +60,7 @@ class PacerSession(requests.Session):
     """
     LOGIN_URL = 'https://pacer.login.uscourts.gov/csologin/login.jsf'
 
-    def __init__(self, cookies=None, username=None, password=None):
+    def __init__(self, cookies=None, username=None, password=None, client_code=None):
         """
         Instantiate a new PACER HTTP Session with some Juriscraper defaults
         :param pacer_token: a PACER_SESSION token value
@@ -75,6 +75,7 @@ class PacerSession(requests.Session):
 
         self.username = username
         self.password = password
+        self.client_code = client_code
 
     def get(self, url, auto_login=True, **kwargs):
         """Overrides request.Session.get with session retry logic.
@@ -210,7 +211,7 @@ class PacerSession(requests.Session):
             data={
                 'javax.faces.ViewState': 'stateless',
                 'login': 'login',
-                'login:clientCode': '',
+                'login:clientCode': self.client_code,
                 'login:fbtnLogin': '',
                 'login:loginName': self.username,
                 'login:password': self.password,
